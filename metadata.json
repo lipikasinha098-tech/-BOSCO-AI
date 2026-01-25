@@ -1,0 +1,8 @@
+{
+  "name": "Don Bosco AI: Youth Mentor",
+  "description": "A compassionate AI mentor inspired by the teachings of Saint John Bosco, with Google Search grounding and admin capabilities.",
+  "requestFramePermissions": [
+    "camera",
+    "microphone"
+  ]
+}
