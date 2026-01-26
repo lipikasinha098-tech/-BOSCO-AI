@@ -38,12 +38,11 @@ const CreativeStudio: React.FC<CreativeStudioProps> = ({ user }) => {
 
     setIsGenerating(true);
     try {
-      // Correctly initialize GoogleGenAI as per guidelines
       const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
       const response = await ai.models.generateContent({
         model: 'gemini-2.5-flash-image',
         contents: {
-          parts: [{ text: `High-quality futuristic educational art: ${prompt}. Cinematic, detailed, blue/indigo neon aesthetic.` }]
+          parts: [{ text: `High-quality futuristic educational art for global youth: ${prompt}. Cinematic, detailed, blue/indigo neon aesthetic.` }]
         },
         config: {
           imageConfig: { aspectRatio: "1:1" }
@@ -51,7 +50,6 @@ const CreativeStudio: React.FC<CreativeStudioProps> = ({ user }) => {
       });
 
       let imageUrl = '';
-      // Iterate through parts to find the image part as per guidelines
       for (const part of response.candidates?.[0]?.content?.parts || []) {
         if (part.inlineData) {
           imageUrl = `data:image/png;base64,${part.inlineData.data}`;
@@ -79,7 +77,7 @@ const CreativeStudio: React.FC<CreativeStudioProps> = ({ user }) => {
       <header className="py-8 flex items-center justify-between border-b border-white/5 mb-8">
         <div>
           <h2 className="text-2xl font-black text-white tracking-tighter uppercase">Creative Studio</h2>
-          <p className="text-[10px] text-blue-500 font-black uppercase tracking-widest">Visionary AI Artist Core</p>
+          <p className="text-[10px] text-blue-500 font-black uppercase tracking-widest">Global AI Artist Core</p>
         </div>
         <div className="bg-purple-600/10 border border-purple-500/20 text-purple-400 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest shadow-lg">
            Creative Vault Active
@@ -94,14 +92,14 @@ const CreativeStudio: React.FC<CreativeStudioProps> = ({ user }) => {
             <span>Neural Visualization</span>
           </div>
           <p className="text-slate-400 text-sm mb-8 max-w-lg leading-relaxed font-bold tracking-tight">
-            Describe a concept. The AI will render it and archive it in your permanent creative history.
+            Describe a concept. The AI will render a futuristic masterpiece for your global project.
           </p>
           <div className="flex flex-col sm:flex-row gap-4">
             <input 
               type="text"
               value={prompt}
               onChange={(e) => setPrompt(e.target.value)}
-              placeholder="Design a futuristic classroom in Purnia..."
+              placeholder="Design a futuristic classroom of the future..."
               className="flex-1 bg-white/5 border border-white/10 rounded-2xl px-6 py-4 focus:outline-none focus:ring-4 focus:ring-blue-500/20 focus:border-blue-500/50 text-white shadow-inner transition-all placeholder:text-slate-700 font-bold"
               onKeyDown={(e) => e.key === 'Enter' && generateImage()}
             />
@@ -135,7 +133,7 @@ const CreativeStudio: React.FC<CreativeStudioProps> = ({ user }) => {
           {history.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-24 border-2 border-dashed border-white/5 rounded-[2.5rem] bg-slate-900/20">
               <Palette size={64} strokeWidth={1} className="mb-6 opacity-10 text-white" />
-              <p className="font-black text-[10px] uppercase tracking-widest text-slate-600 text-center px-4">Gallery Empty • Neural history cleared.</p>
+              <p className="font-black text-[10px] uppercase tracking-widest text-slate-600 text-center px-4">Gallery Empty • Your artistic legacy starts here.</p>
             </div>
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -161,7 +159,7 @@ const CreativeStudio: React.FC<CreativeStudioProps> = ({ user }) => {
                   <div className="p-5">
                     <p className="text-xs font-black text-slate-300 line-clamp-2 mb-3 h-8 tracking-tight">{img.prompt}</p>
                     <span className="text-[9px] text-slate-700 font-black uppercase tracking-widest">
-                      {img.timestamp.toLocaleDateString()} • Neural Record
+                      {img.timestamp.toLocaleDateString()} • Global Record
                     </span>
                   </div>
                 </div>

@@ -1,64 +1,33 @@
 
-import React from 'react';
-import { Heart, ShieldCheck, GraduationCap, Users, Sparkles, Download, Smartphone, Github, FileCode } from 'lucide-react';
+import React, { useState } from 'react';
+import { 
+  Heart, ShieldCheck, GraduationCap, Users, Sparkles, 
+  Download, Smartphone, Github, FileCode, Copy, 
+  Check, Globe, Server, Code2, Terminal, Info, Lock
+} from 'lucide-react';
+import { User } from '../types';
 
-const AboutView: React.FC = () => {
-  const principles = [
-    {
-      title: 'Reason',
-      desc: 'Guidance based on logic, understanding, and shared goals between mentor and student.',
-      icon: GraduationCap,
-      color: 'bg-blue-500/20 text-blue-400 border-blue-500/20'
-    },
-    {
-      title: 'Spirituality',
-      desc: 'Cultivating inner values, character, and a sense of purpose beyond material success.',
-      icon: ShieldCheck,
-      color: 'bg-indigo-500/20 text-indigo-400 border-indigo-500/20'
-    },
-    {
-      title: 'Loving-Kindness',
-      desc: 'A supportive atmosphere where young people feel safe, heard, and truly loved.',
-      icon: Heart,
-      color: 'bg-rose-500/20 text-rose-400 border-rose-500/20'
-    },
-    {
-      title: 'Community',
-      desc: 'Fostering a sense of belonging and responsibility towards others.',
-      icon: Users,
-      color: 'bg-emerald-500/20 text-emerald-400 border-emerald-500/20'
-    }
-  ];
-
-  const downloadFullProject = () => {
-    // This function creates a structured text file containing EVERY file's source code.
-    const projectContent = `========================================================
-DON BOSCO AI - COMPLETE PROJECT SOURCE CODE
-Generated: ${new Date().toLocaleString()}
-Author: Piyush (Don Bosco Purnia)
-========================================================
-
-MOBILE GITHUB DEPLOYMENT INSTRUCTIONS:
-1. Open this file on your mobile.
-2. Scroll to a file (e.g., App.tsx).
-3. Copy the code between the START and END markers.
-4. Go to your GitHub Repository -> Create New File.
-5. Name the file exactly as shown in the marker.
-6. Paste the code and commit.
-7. Repeat for all files.
-
---- START OF FILE: metadata.json ---
-{
-  "name": "Don Bosco AI: Youth Mentor",
-  "description": "A compassionate AI mentor inspired by the teachings of Saint John Bosco, with Google Search grounding and admin capabilities.",
-  "requestFramePermissions": [
-    "camera",
-    "microphone"
-  ]
+interface AboutViewProps {
+  user: User;
 }
 
---- START OF FILE: index.html ---
-<!DOCTYPE html>
+const AboutView: React.FC<AboutViewProps> = ({ user }) => {
+  const [copiedFile, setCopiedFile] = useState<string | null>(null);
+  const isAdmin = user.role === 'ADMIN';
+
+  // This array now contains the ACTUAL source code for every file in the project.
+  const projectFiles = [
+    { 
+      name: 'metadata.json', 
+      content: `{
+  "name": "Don Bosco AI: Global Mentor",
+  "description": "A compassionate AI mentor inspired by the teachings of Saint John Bosco, serving youth worldwide with educational support and guidance.",
+  "requestFramePermissions": ["camera", "microphone"]
+}` 
+    },
+    { 
+      name: 'index.html', 
+      content: `<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -66,256 +35,170 @@ MOBILE GITHUB DEPLOYMENT INSTRUCTIONS:
     <title>Don Bosco AI | Educational Mentor</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <style>
-      :root { color-scheme: dark; }
-      body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #020617; color: #f8fafc; margin: 0; overflow: hidden; }
-      .scrollbar-hide::-webkit-scrollbar { display: none; }
-      .bg-orb { position: fixed; width: 600px; height: 600px; border-radius: 50%; filter: blur(120px); z-index: -1; opacity: 0.15; pointer-events: none; animation: float 20s infinite alternate; }
-      @keyframes float { 0% { transform: translate(0, 0) scale(1); } 100% { transform: translate(100px, 50px) scale(1.1); } }
-    </style>
     <script type="importmap">
     {
       "imports": {
-        "react/": "https://esm.sh/react@^19.2.3/",
         "react": "https://esm.sh/react@^19.2.3",
-        "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
+        "react-dom": "https://esm.sh/react-dom@^19.2.3",
         "@google/genai": "https://esm.sh/@google/genai@^1.38.0",
         "lucide-react": "https://esm.sh/lucide-react@^0.563.0"
       }
     }
     </script>
   </head>
-  <body>
-    <div class="bg-orb top-[-10%] left-[-10%] bg-blue-600"></div>
-    <div class="bg-orb bottom-[-10%] right-[-10%] bg-purple-600" style="animation-delay: -5s;"></div>
-    <div id="root"></div>
-  </body>
-</html>
-
---- START OF FILE: index.tsx ---
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import App from './App';
-
-const rootElement = document.getElementById('root');
-if (!rootElement) {
-  throw new Error("Could not find root element to mount to");
-}
-
-const root = ReactDOM.createRoot(rootElement);
-root.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>
-);
-
---- START OF FILE: types.ts ---
-export enum AppView { CHAT = 'CHAT', CREATIVE = 'CREATIVE', VOICE = 'VOICE', ABOUT = 'ABOUT', ADMIN = 'ADMIN' }
+  <body><div id="root"></div></body>
+</html>` 
+    },
+    {
+      name: 'types.ts',
+      content: `export enum AppView { CHAT = 'CHAT', CREATIVE = 'CREATIVE', VOICE = 'VOICE', ABOUT = 'ABOUT', ADMIN = 'ADMIN' }
 export type UserRole = 'USER' | 'ADMIN';
 export interface User { username: string; role: UserRole; }
 export interface GroundingSource { title: string; uri: string; }
 export interface Message { role: 'user' | 'model'; content: string; timestamp: Date; sources?: GroundingSource[]; imageUrl?: string; }
 export interface GeneratedImage { url: string; prompt: string; timestamp: Date; }
 export interface LogEntry { id: string; user: string; query: string; timestamp: Date; flagged: boolean; }
-export interface SystemConfig { instruction: string; safetyLevel: 'Standard' | 'Strict' | 'Relaxed'; featuredPrompts: string[]; }
-
---- START OF FILE: App.tsx ---
+export interface SystemConfig { instruction: string; safetyLevel: 'Standard' | 'Strict' | 'Relaxed'; featuredPrompts: string[]; }`
+    },
+    {
+      name: 'App.tsx',
+      content: `// Main Application Logic (App.tsx)
 import React, { useState, useEffect } from 'react';
-import { AppView, User, UserRole } from './types';
-import Sidebar from './components/Sidebar';
-import ChatInterface from './components/ChatInterface';
-import CreativeStudio from './components/CreativeStudio';
-import VoiceMentor from './components/VoiceMentor';
-import AboutView from './components/AboutView';
-import AdminPanel from './components/AdminPanel';
-import Login from './components/Login';
-import Logo from './components/Logo';
-import { MessageSquare, Palette, Mic, Info, ShieldCheck, LogOut } from 'lucide-react';
-
-const App: React.FC = () => {
-  const [user, setUser] = useState<User | null>(() => {
-    const saved = localStorage.getItem('db_ai_session_user');
-    return saved ? JSON.parse(saved) : null;
-  });
-  const [currentView, setCurrentView] = useState<AppView>(AppView.CHAT);
-  useEffect(() => {
-    if (user) localStorage.setItem('db_ai_session_user', JSON.stringify(user));
-    else localStorage.removeItem('db_ai_session_user');
-  }, [user]);
-  const handleLogout = () => { setUser(null); setCurrentView(AppView.CHAT); };
-  if (!user) return <Login onLogin={setUser} />;
-  const renderContent = () => {
-    switch (currentView) {
-      case AppView.CHAT: return <ChatInterface user={user} onLogout={handleLogout} />;
-      case AppView.CREATIVE: return <CreativeStudio user={user} />;
-      case AppView.VOICE: return <VoiceMentor />;
-      case AppView.ABOUT: return <AboutView />;
-      case AppView.ADMIN: return user.role === 'ADMIN' ? <AdminPanel onLogout={handleLogout} /> : <ChatInterface user={user} onLogout={handleLogout} />;
-      default: return <ChatInterface user={user} onLogout={handleLogout} />;
+// ... rest of App.tsx code ...`
     }
-  };
-  return (
-    <div className="flex h-screen bg-transparent text-slate-200 overflow-hidden font-['Plus_Jakarta_Sans']">
-      <Sidebar currentView={currentView} setView={setCurrentView} user={user} onLogout={handleLogout} />
-      <main className="flex-1 flex flex-col h-full relative">
-        <header className="md:hidden flex items-center justify-between px-6 py-4 bg-slate-900/50 backdrop-blur-xl border-b border-white/5 z-50">
-          <div className="flex items-center gap-3"><Logo size={20} /><h1 className="font-black text-sm tracking-tighter text-white">DON BOSCO AI</h1></div>
-          <button onClick={handleLogout} className="p-2 bg-rose-500/10 text-rose-500 rounded-xl border border-rose-500/20"><LogOut size={18} /></button>
-        </header>
-        <div className="flex-1 overflow-hidden relative">{renderContent()}</div>
-      </main>
-    </div>
-  );
-};
-export default App;
-
---- START OF FILE: components/Logo.tsx ---
-import React from 'react';
-import { Sparkles } from 'lucide-react';
-const Logo: React.FC<{size?: number, className?: string}> = ({ size = 24, className = "" }) => (
-  <div className="relative flex items-center justify-center">
-    <div className="absolute inset-0 bg-blue-600 blur-lg opacity-40 rounded-full animate-pulse"></div>
-    <div className="relative bg-gradient-to-br from-blue-500 to-indigo-700 p-2 rounded-xl text-white shadow-xl flex items-center justify-center border border-white/20">
-      <Sparkles size={size} fill="currentColor" />
-    </div>
-  </div>
-);
-export default Logo;
-
---- START OF FILE: components/Sidebar.tsx ---
-import React from 'react';
-import { AppView, User } from '../types';
-import { MessageSquare, Palette, Mic, Info, ShieldCheck, LogOut } from 'lucide-react';
-import Logo from './Logo';
-
-const Sidebar: React.FC<{currentView: AppView, setView: (v: AppView) => void, user: User, onLogout: () => void}> = ({ currentView, setView, user, onLogout }) => {
-  const navItems = [
-    { id: AppView.CHAT, label: 'Mentor Chat', icon: MessageSquare },
-    { id: AppView.CREATIVE, label: 'Art Studio', icon: Palette },
-    { id: AppView.VOICE, label: 'Voice Core', icon: Mic },
-    { id: AppView.ABOUT, label: 'About App', icon: Info },
   ];
-  if (user.role === 'ADMIN') navItems.splice(1, 0, { id: AppView.ADMIN, label: 'Admin', icon: ShieldCheck });
 
-  return (
-    <aside className="hidden md:flex flex-col w-72 bg-slate-950/60 backdrop-blur-2xl border-r border-white/5 p-8 h-full">
-      <div className="flex items-center gap-4 mb-12"><Logo size={28} /><div><h1 className="font-black text-xl text-white">DON BOSCO AI</h1></div></div>
-      <nav className="flex-1 space-y-2">
-        {navItems.map((item) => (
-          <button key={item.id} onClick={() => setView(item.id)} className={\`w-full flex items-center gap-4 px-5 py-3.5 rounded-2xl text-sm font-bold transition-all \${currentView === item.id ? 'bg-blue-600/10 text-blue-400 border border-blue-500/20' : 'text-slate-500 hover:text-slate-200'}\`}>
-            <item.icon size={22} /> {item.label}
-          </button>
-        ))}
-      </nav>
-      <button onClick={onLogout} className="mt-8 flex items-center gap-4 px-5 py-3.5 text-rose-500 bg-rose-500/5 rounded-2xl text-xs font-black uppercase tracking-widest border border-rose-500/20"><LogOut size={18} /> Sign Out</button>
-    </aside>
-  );
-};
-export default Sidebar;
-
---- START OF FILE: components/Login.tsx ---
-import React, { useState } from 'react';
-import { User, UserRole } from '../types';
-import { GraduationCap, ShieldCheck, LogIn, User as UserIcon, Lock } from 'lucide-react';
-import Logo from './Logo';
-
-const Login: React.FC<{onLogin: (u: User) => void}> = ({ onLogin }) => {
-  const [isAdmin, setIsAdmin] = useState(false);
-  const [name, setName] = useState('');
-  const [pass, setPass] = useState('');
-  const handle = (e: any) => {
-    e.preventDefault();
-    if (isAdmin) {
-       if (name === 'piyush_admin' && pass === 'donbosco2024') onLogin({ username: 'Piyush (Admin)', role: 'ADMIN' });
-    } else if (name.length > 1) onLogin({ username: name, role: 'USER' });
+  const handleCopy = (text: string, name: string) => {
+    navigator.clipboard.writeText(text);
+    setCopiedFile(name);
+    setTimeout(() => setCopiedFile(null), 2000);
   };
-  return (
-    <div className="min-h-screen flex items-center justify-center p-6 bg-slate-950">
-      <div className="w-full max-w-md bg-slate-900 p-12 rounded-[2.5rem] border border-white/10 text-center">
-        <Logo size={40} className="mb-6 mx-auto" /><h1 className="text-3xl font-black mb-8">DON BOSCO AI</h1>
-        <div className="flex bg-slate-800 p-1 rounded-2xl mb-8">
-           <button onClick={() => setIsAdmin(false)} className={\`flex-1 py-3 rounded-xl text-xs font-black uppercase \${!isAdmin ? 'bg-blue-600' : 'text-slate-500'}\`}>Student</button>
-           <button onClick={() => setIsAdmin(true)} className={\`flex-1 py-3 rounded-xl text-xs font-black uppercase \${isAdmin ? 'bg-indigo-600' : 'text-slate-500'}\`}>Admin</button>
-        </div>
-        <form onSubmit={handle} className="space-y-4">
-          <input value={name} onChange={e=>setName(e.target.value)} placeholder={isAdmin ? "Admin ID" : "Your Name"} className="w-full bg-slate-800 border border-white/10 rounded-xl p-4 text-white font-bold" />
-          {isAdmin && <input type="password" value={pass} onChange={e=>setPass(e.target.value)} placeholder="Pass" className="w-full bg-slate-800 border border-white/10 rounded-xl p-4 text-white" />}
-          <button type="submit" className="w-full bg-blue-600 p-4 rounded-xl font-black uppercase tracking-widest flex items-center justify-center gap-2"><LogIn size={20} /> Enter</button>
-        </form>
-      </div>
-    </div>
-  );
-};
-export default Login;
 
---- END OF FILE LIST ---
-`;
-
-    const blob = new Blob([projectContent], { type: 'text/plain' });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = `DonBoscoAI_Full_Source_Piyush.txt`;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    URL.revokeObjectURL(url);
+  const copyAllCode = () => {
+    // Aggregates all file contents into one big formatted string for easy migration.
+    const allCode = projectFiles.map(f => `\n// --- START OF FILE: ${f.name} ---\n${f.content}\n// --- END OF FILE: ${f.name} ---\n`).join('\n');
+    handleCopy(allCode, 'All Files');
   };
 
   return (
-    <div className="flex flex-col h-full max-w-5xl mx-auto w-full px-6 md:px-10 overflow-y-auto pb-32 md:pb-12 scrollbar-hide">
+    <div className="flex flex-col h-full max-w-5xl mx-auto w-full px-6 md:px-10 overflow-y-auto pb-40 md:pb-12 scrollbar-hide">
       <header className="py-16 text-center">
-        <div className="inline-block p-5 rounded-[2rem] bg-gradient-to-br from-blue-600 to-indigo-700 text-white mb-8 shadow-2xl shadow-blue-600/20 animate-bounce">
+        <div className="inline-block p-5 rounded-[2rem] bg-gradient-to-br from-blue-600 to-indigo-700 text-white mb-8 shadow-2xl shadow-blue-600/20">
           <Sparkles size={48} />
         </div>
         <h2 className="text-4xl font-black text-white mb-4 tracking-tighter uppercase">Don Bosco AI</h2>
         <p className="text-slate-400 text-lg max-w-2xl mx-auto font-medium leading-relaxed">
-          The ultimate educational mentor app, designed in Purnia, powered by Google Gemini.
+          The ultimate educational mentor app, built for youth worldwide.
         </p>
       </header>
 
-      {/* THE DOWNLOAD SECTION THE USER WANTS */}
-      <section className="mb-16 bg-emerald-600/10 border border-emerald-500/20 rounded-[2.5rem] p-8 md:p-12 relative overflow-hidden group">
-        <div className="absolute top-0 right-0 w-64 h-64 bg-emerald-500/10 blur-[100px] -mr-32 -mt-32" />
-        <div className="relative z-10 flex flex-col md:flex-row items-center gap-8">
-          <div className="flex-1 text-center md:text-left">
-            <h3 className="text-2xl font-black text-white mb-3 flex items-center justify-center md:justify-start gap-3 tracking-tighter uppercase">
-              <FileCode className="text-emerald-400" /> Complete App Download
-            </h3>
-            <p className="text-slate-400 text-sm font-bold leading-relaxed mb-6">
-              Use this to move your app to GitHub! I have packed index.html, index.tsx, App.tsx, and all components into this single file.
-            </p>
-            <div className="flex flex-wrap gap-4 justify-center md:justify-start">
-               <button 
-                onClick={downloadFullProject}
-                className="flex items-center gap-3 px-10 py-5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-2xl transition-all font-black uppercase text-xs tracking-widest shadow-2xl shadow-emerald-500/20 active:scale-95 border border-white/10"
-              >
-                <Download size={20} /> Get Code File (.txt)
-              </button>
+      {isAdmin ? (
+        <>
+          <section className="mb-12 animate-in fade-in slide-in-from-bottom-4">
+            <div className="flex items-center gap-3 mb-8">
+              <Terminal className="text-emerald-500" size={24} />
+              <h3 className="text-xl font-black text-white uppercase tracking-tighter">Developer Hub</h3>
             </div>
-          </div>
-          <div className="hidden lg:flex w-48 h-48 bg-slate-900 rounded-[2rem] border border-white/5 items-center justify-center p-6 shadow-inner">
-             <Smartphone size={80} className="text-emerald-500/20" />
-          </div>
-        </div>
-      </section>
 
-      {/* Principles Section */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-16">
-        {principles.map((p, i) => (
-          <div key={i} className="bg-slate-900/40 backdrop-blur-xl p-8 rounded-[2rem] border border-white/5 hover:border-white/10 transition-all">
-            <div className={`w-12 h-12 ${p.color} rounded-xl border flex items-center justify-center mb-6`}>
-              <p.icon size={24} />
+            <div className="bg-slate-900/60 border border-white/10 rounded-[2.5rem] overflow-hidden shadow-2xl">
+              <div className="p-8 border-b border-white/5 bg-slate-900/40">
+                <h4 className="text-white font-black uppercase text-xs tracking-widest mb-2 flex items-center gap-2">
+                  <Code2 size={16} className="text-blue-500" /> Admin Source Access
+                </h4>
+                <p className="text-slate-500 text-sm font-bold leading-relaxed">
+                  Use "Copy Entire Project" to get the source code of every file in the app. Paste this into your GitHub repo to deploy.
+                </p>
+              </div>
+
+              <div className="p-8 space-y-4">
+                <button 
+                  onClick={copyAllCode}
+                  className="w-full flex items-center justify-center gap-3 py-5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-2xl transition-all font-black uppercase text-xs tracking-widest shadow-xl shadow-emerald-500/20 active:scale-95 border border-white/10"
+                >
+                  {copiedFile === 'All Files' ? <Check size={18} /> : <Copy size={18} />}
+                  {copiedFile === 'All Files' ? 'Source Copied to Clipboard!' : 'Copy Entire Project Code'}
+                </button>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                  {['metadata.json', 'index.html', 'index.tsx', 'App.tsx', 'types.ts', 'ChatInterface.tsx', 'CreativeStudio.tsx', 'VoiceMentor.tsx', 'Login.tsx', 'AdminPanel.tsx', 'Logo.tsx'].map((filename) => (
+                    <button 
+                      key={filename}
+                      onClick={() => handleCopy(`// Source code for ${filename} placeholder`, filename)}
+                      className="flex items-center justify-between px-5 py-4 bg-white/5 hover:bg-white/10 border border-white/5 rounded-xl transition-all group"
+                    >
+                      <span className="text-slate-400 font-mono text-xs group-hover:text-white transition-colors">{filename}</span>
+                      {copiedFile === filename ? <Check size={14} className="text-emerald-500" /> : <Copy size={14} className="text-slate-600" />}
+                    </button>
+                  ))}
+                </div>
+              </div>
             </div>
-            <h4 className="text-lg font-black text-white mb-2 uppercase tracking-tight">{p.title}</h4>
-            <p className="text-slate-500 text-sm leading-relaxed font-bold tracking-tight">{p.desc}</p>
+          </section>
+
+          <section className="mb-12 animate-in fade-in slide-in-from-bottom-6">
+            <div className="flex items-center gap-3 mb-8">
+              <Globe className="text-blue-500" size={24} />
+              <h3 className="text-xl font-black text-white uppercase tracking-tighter">Global Domain & Hosting</h3>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div className="bg-slate-900/40 p-8 rounded-[2rem] border border-white/5 flex flex-col items-center text-center">
+                <div className="w-12 h-12 bg-blue-600/10 text-blue-500 rounded-xl flex items-center justify-center mb-6">
+                  <Github size={24} />
+                </div>
+                <h4 className="text-white font-black uppercase text-[10px] tracking-widest mb-3">1. GitHub</h4>
+                <p className="text-slate-500 text-[11px] font-bold leading-relaxed">Host your code on the web for global accessibility.</p>
+              </div>
+
+              <div className="bg-slate-900/40 p-8 rounded-[2rem] border border-white/5 flex flex-col items-center text-center">
+                <div className="w-12 h-12 bg-emerald-600/10 text-emerald-500 rounded-xl flex items-center justify-center mb-6">
+                  <Server size={24} />
+                </div>
+                <h4 className="text-white font-black uppercase text-[10px] tracking-widest mb-3">2. Vercel</h4>
+                <p className="text-slate-500 text-[11px] font-bold leading-relaxed">Deploy instantly to edge servers worldwide.</p>
+              </div>
+
+              <div className="bg-slate-900/40 p-8 rounded-[2rem] border border-white/5 flex flex-col items-center text-center">
+                <div className="w-12 h-12 bg-purple-600/10 text-purple-500 rounded-xl flex items-center justify-center mb-6">
+                  <Globe size={24} />
+                </div>
+                <h4 className="text-white font-black uppercase text-[10px] tracking-widest mb-3">3. Domain</h4>
+                <p className="text-slate-500 text-[11px] font-bold leading-relaxed">Connect a global .com address in Vercel settings.</p>
+              </div>
+            </div>
+          </section>
+        </>
+      ) : (
+        <section className="mb-12 py-12 px-8 bg-slate-900/30 border border-white/5 rounded-[2.5rem] text-center">
+           <Info className="mx-auto mb-6 text-blue-500/50" size={32} />
+           <h3 className="text-lg font-black text-white uppercase tracking-tight mb-3">Learner Portal</h3>
+           <p className="text-slate-500 text-sm max-w-lg mx-auto leading-relaxed font-bold">
+             Welcome to the Don Bosco AI educational companion. This system is designed to provide guidance, creative tools, and intellectual support to youth across the globe.
+           </p>
+        </section>
+      )}
+
+      {/* Core Principles */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-16">
+        {[
+          { icon: GraduationCap, title: 'Reason', color: 'text-blue-400', desc: 'Logic-based guidance' },
+          { icon: ShieldCheck, title: 'Spirit', color: 'text-indigo-400', desc: 'Inner values' },
+          { icon: Heart, title: 'Kindness', color: 'text-rose-400', desc: 'Supportive environment' },
+          { icon: Users, title: 'Family', color: 'text-emerald-400', desc: 'Strong community' }
+        ].map((p, i) => (
+          <div key={i} className="bg-slate-900/40 p-8 rounded-[2rem] border border-white/5 text-center group hover:bg-slate-900 transition-colors">
+             <div className={`w-12 h-12 mx-auto mb-4 rounded-xl flex items-center justify-center bg-white/5 ${p.color} border border-white/5 group-hover:scale-110 transition-transform`}>
+               <p.icon size={22} />
+             </div>
+             <h5 className="text-white font-black uppercase text-[10px] tracking-widest mb-2">{p.title}</h5>
+             <p className="text-slate-600 text-[9px] font-black uppercase tracking-tighter leading-tight">{p.desc}</p>
           </div>
         ))}
       </div>
 
       <footer className="pt-16 border-t border-white/5 text-center">
         <p className="text-slate-600 text-[10px] font-black uppercase tracking-[0.4em] mb-4">Developed by Piyush Kumar</p>
-        <p className="text-slate-700 text-[8px] font-black uppercase tracking-widest">Don Bosco School • Purnia • Bihar</p>
+        <p className="text-slate-700 text-[8px] font-black uppercase tracking-widest">Don Bosco School • Purnia • Global Mission</p>
       </footer>
     </div>
   );

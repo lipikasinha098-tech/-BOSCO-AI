@@ -17,7 +17,7 @@ const AdminPanel: React.FC<AdminPanelProps> = ({ onLogout }) => {
   const [config, setConfig] = useState<SystemConfig>({
     instruction: '',
     safetyLevel: 'Standard',
-    featuredPrompts: ['How can I help my community?', 'Design a low-cost solar heater', 'Explain AI ethics']
+    featuredPrompts: ['How can I help my global community?', 'Design a low-cost water filter', 'Explain AI ethics for youth']
   });
 
   const LOG_KEY = 'db_ai_global_logs';
@@ -33,9 +33,9 @@ const AdminPanel: React.FC<AdminPanelProps> = ({ onLogout }) => {
         setConfig(savedConfig);
       } else {
         const initialConfig: SystemConfig = {
-          instruction: 'You are DON BOSCO AI, build by PIYUSH FROM DON BOSCO PURNIA. You are a genius mentor. Be extremely fast and concise.',
+          instruction: 'You are DON BOSCO AI, build by PIYUSH FROM DON BOSCO PURNIA. You are a global genius mentor for youth worldwide. Be extremely fast, compassionate, and concise.',
           safetyLevel: 'Standard',
-          featuredPrompts: ['How can I help my community?', 'Design a low-cost solar heater', 'Explain AI ethics']
+          featuredPrompts: ['How can I help my global community?', 'Design a low-cost water filter', 'Explain AI ethics for youth']
         };
         setConfig(initialConfig);
         localStorage.setItem(CONFIG_KEY, JSON.stringify(initialConfig));
@@ -55,7 +55,7 @@ const AdminPanel: React.FC<AdminPanelProps> = ({ onLogout }) => {
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.href = url;
-    link.download = `DonBoscoAI_SecurityLogs_${new Date().toISOString().slice(0,10)}.txt`;
+    link.download = `DonBoscoAI_GlobalSecurityLogs_${new Date().toISOString().slice(0,10)}.txt`;
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -64,7 +64,7 @@ const AdminPanel: React.FC<AdminPanelProps> = ({ onLogout }) => {
 
   const saveConfig = () => {
     localStorage.setItem(CONFIG_KEY, JSON.stringify(config));
-    alert('Deployment Successful: System instructions updated for all users.');
+    alert('Deployment Successful: Global system instructions updated.');
   };
 
   const clearLogs = () => {
@@ -75,10 +75,10 @@ const AdminPanel: React.FC<AdminPanelProps> = ({ onLogout }) => {
   };
 
   const stats = [
-    { label: 'Learners', value: '2,492', icon: Users, color: 'text-blue-400', bg: 'bg-blue-500/10', trend: '+18%', border: 'border-blue-500/20' },
-    { label: 'Response', value: `${(logs.length * 1.4).toFixed(1)}k`, icon: MessageSquare, color: 'text-indigo-400', bg: 'bg-indigo-500/10', trend: '+12%', border: 'border-indigo-500/20' },
-    { label: 'Health', value: 'OK', icon: Activity, color: 'text-emerald-400', bg: 'bg-emerald-500/10', trend: 'LIVE', border: 'border-emerald-500/20' },
-    { label: 'Alerts', value: logs.filter(l => l.flagged).length.toString(), icon: ShieldAlert, color: 'text-rose-400', bg: 'bg-rose-500/10', trend: 'LOW', border: 'border-rose-500/20' },
+    { label: 'Global Learners', value: '12,492', icon: Users, color: 'text-blue-400', bg: 'bg-blue-500/10', trend: '+18%', border: 'border-blue-500/20' },
+    { label: 'Neural Traffic', value: `${(logs.length * 5.2).toFixed(1)}k`, icon: MessageSquare, color: 'text-indigo-400', bg: 'bg-indigo-500/10', trend: '+22%', border: 'border-indigo-500/20' },
+    { label: 'Core Health', value: 'STABLE', icon: Activity, color: 'text-emerald-400', bg: 'bg-emerald-500/10', trend: 'LIVE', border: 'border-emerald-500/20' },
+    { label: 'Global Alerts', value: logs.filter(l => l.flagged).length.toString(), icon: ShieldAlert, color: 'text-rose-400', bg: 'bg-rose-500/10', trend: 'LOW', border: 'border-rose-500/20' },
   ];
 
   return (
@@ -89,15 +89,15 @@ const AdminPanel: React.FC<AdminPanelProps> = ({ onLogout }) => {
             <ShieldCheck size={20} />
           </div>
           <div>
-            <h2 className="text-lg md:text-2xl font-black text-white tracking-tighter uppercase leading-none">Admin</h2>
-            <p className="text-slate-500 text-[9px] font-black uppercase tracking-widest mt-1">Purnia Server Cluster</p>
+            <h2 className="text-lg md:text-2xl font-black text-white tracking-tighter uppercase leading-none">Global Admin</h2>
+            <p className="text-slate-500 text-[9px] font-black uppercase tracking-widest mt-1">Global Mentor Network Hub</p>
           </div>
         </div>
         
         <div className="flex items-center gap-3">
           <div className="hidden sm:flex bg-slate-900 border border-white/5 px-3 py-1.5 rounded-xl items-center gap-2">
              <div className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse" />
-             <span className="text-[8px] font-black text-slate-400 uppercase tracking-widest">Secure</span>
+             <span className="text-[8px] font-black text-slate-400 uppercase tracking-widest">Secure Core</span>
           </div>
           <button onClick={onLogout} className="p-2.5 bg-rose-600/10 border border-rose-500/20 text-rose-500 rounded-xl">
             <LogOut size={16} />
@@ -109,7 +109,7 @@ const AdminPanel: React.FC<AdminPanelProps> = ({ onLogout }) => {
         {[
           { id: 'dashboard', label: 'Overview', icon: Globe },
           { id: 'moderation', label: 'Security', icon: Eye },
-          { id: 'config', label: 'Neural', icon: Settings },
+          { id: 'config', label: 'Persona', icon: Settings },
           { id: 'content', label: 'Content', icon: FileText },
         ].map(tab => (
           <button
@@ -146,7 +146,7 @@ const AdminPanel: React.FC<AdminPanelProps> = ({ onLogout }) => {
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
               <div className="lg:col-span-2 bg-slate-900/40 rounded-[1.5rem] md:rounded-[2.5rem] border border-white/5 p-6 md:p-8">
                 <h3 className="text-sm font-black text-white mb-6 flex items-center gap-3 uppercase tracking-widest">
-                  <Activity size={16} className="text-blue-500" /> Neural Activity
+                  <Activity size={16} className="text-blue-500" /> Global Neural Activity
                 </h3>
                 <div className="h-32 flex items-end gap-1.5 px-1">
                    {[40, 70, 45, 90, 65, 80, 55, 30, 85, 95, 40, 60].map((h, i) => (
@@ -158,12 +158,12 @@ const AdminPanel: React.FC<AdminPanelProps> = ({ onLogout }) => {
               </div>
               <div className="bg-slate-900/40 rounded-[1.5rem] md:rounded-[2.5rem] border border-white/5 p-6 md:p-8 flex flex-col justify-between">
                  <div>
-                   <h3 className="text-sm font-black text-white mb-2 uppercase tracking-widest">Regional</h3>
-                   <p className="text-slate-500 text-[10px] font-bold">Node: PURNIA_01</p>
+                   <h3 className="text-sm font-black text-white mb-2 uppercase tracking-widest">Global Node</h3>
+                   <p className="text-slate-500 text-[10px] font-bold">Node: CLOUD_GLOBAL_01</p>
                  </div>
                  <div className="space-y-4 py-6">
                     <div className="flex items-center justify-between text-[8px] font-black">
-                       <span className="text-slate-400 uppercase">Latency</span>
+                       <span className="text-slate-400 uppercase">Edge Latency</span>
                        <span className="text-emerald-400">12ms</span>
                     </div>
                     <div className="h-1 bg-slate-800 rounded-full">
@@ -171,7 +171,7 @@ const AdminPanel: React.FC<AdminPanelProps> = ({ onLogout }) => {
                     </div>
                  </div>
                  <button className="w-full py-2.5 bg-white/5 hover:bg-white/10 rounded-xl text-[9px] font-black text-slate-500 uppercase tracking-widest border border-white/5">
-                    Hot Reset
+                    Sync Clusters
                  </button>
               </div>
             </div>
@@ -182,7 +182,7 @@ const AdminPanel: React.FC<AdminPanelProps> = ({ onLogout }) => {
           <div className="bg-slate-950/50 rounded-[1.5rem] md:rounded-[2.5rem] border border-white/10 overflow-hidden flex flex-col h-[450px] animate-in slide-in-from-bottom-4 shadow-2xl">
             <div className="p-4 border-b border-white/10 flex items-center justify-between bg-slate-900/50">
               <h3 className="text-[9px] font-black text-white uppercase tracking-widest flex items-center gap-2">
-                <Database size={14} className="text-rose-500" /> Server Logs
+                <Database size={14} className="text-rose-500" /> Global Security Logs
               </h3>
               <div className="flex gap-2">
                 <button onClick={exportLogs} title="Export Logs" className="p-1.5 text-emerald-500 hover:bg-emerald-500/10 rounded-lg">
@@ -195,7 +195,7 @@ const AdminPanel: React.FC<AdminPanelProps> = ({ onLogout }) => {
             </div>
             <div className="flex-1 overflow-y-auto p-3 font-mono text-[10px] space-y-3">
               {logs.length === 0 ? (
-                <div className="h-full flex items-center justify-center text-slate-700 italic">No local activity...</div>
+                <div className="h-full flex items-center justify-center text-slate-700 italic">Listening for global activity...</div>
               ) : logs.map(log => (
                 <div key={log.id} className={`p-3 rounded-xl border ${log.flagged ? 'bg-rose-950/20 border-rose-500/30' : 'bg-white/5 border-white/5'}`}>
                   <div className="flex justify-between items-center mb-1">
@@ -209,11 +209,11 @@ const AdminPanel: React.FC<AdminPanelProps> = ({ onLogout }) => {
           </div>
         )}
 
-        {activeTab === 'config' && (
+        {activeTab === 'config' && (activeTab === 'config' && (
           <div className="space-y-6 animate-in slide-in-from-bottom-4">
              <div className="bg-slate-900/60 p-6 md:p-8 rounded-[1.5rem] md:rounded-[2.5rem] border border-white/10 shadow-xl">
                 <h3 className="text-sm font-black text-white mb-4 flex items-center gap-3 uppercase tracking-widest">
-                  <Settings size={16} className="text-blue-400" /> AI Persona Config
+                  <Settings size={16} className="text-blue-400" /> Global Neural Config
                 </h3>
                 <textarea 
                   value={config.instruction}
@@ -222,7 +222,7 @@ const AdminPanel: React.FC<AdminPanelProps> = ({ onLogout }) => {
                 />
                 <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                    <div className="flex items-center gap-3">
-                      <span className="text-[9px] font-black text-slate-500 uppercase tracking-widest">Tier:</span>
+                      <span className="text-[9px] font-black text-slate-500 uppercase tracking-widest">Global Tier:</span>
                       <select 
                         value={config.safetyLevel}
                         onChange={(e) => setConfig({...config, safetyLevel: e.target.value as any})}
@@ -233,12 +233,12 @@ const AdminPanel: React.FC<AdminPanelProps> = ({ onLogout }) => {
                       </select>
                    </div>
                    <button onClick={saveConfig} className="w-full sm:w-auto flex items-center justify-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-xl font-black uppercase text-[9px] tracking-widest shadow-xl shadow-blue-500/20">
-                      <Save size={14} /> Deploy Persona
+                      <Save size={14} /> Update Global Persona
                    </button>
                 </div>
              </div>
           </div>
-        )}
+        ))}
 
         {activeTab === 'content' && (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 animate-in zoom-in-95">
@@ -253,7 +253,7 @@ const AdminPanel: React.FC<AdminPanelProps> = ({ onLogout }) => {
                    ))}
                 </div>
                 <button className="w-full mt-4 py-2.5 border border-dashed border-white/10 rounded-xl text-[8px] font-black text-slate-600 uppercase tracking-widest">
-                  + Add Prompt
+                  + Add New Prompt
                 </button>
              </div>
              <div className="bg-indigo-600/5 p-6 md:p-8 rounded-[1.5rem] md:rounded-[2.5rem] border border-indigo-500/10 flex flex-col items-center text-center">
@@ -261,9 +261,9 @@ const AdminPanel: React.FC<AdminPanelProps> = ({ onLogout }) => {
                    <FileText size={20} />
                 </div>
                 <h3 className="text-white font-black text-sm mb-1 uppercase tracking-tighter">Broadcaster</h3>
-                <p className="text-slate-500 text-[10px] mb-4">Push global news to students.</p>
+                <p className="text-slate-500 text-[10px] mb-4">Push global news to all learners.</p>
                 <button className="px-6 py-2.5 bg-indigo-600 text-white rounded-xl font-black text-[9px] uppercase tracking-widest">
-                  Start Broadcast
+                  Start Global Broadcast
                 </button>
              </div>
           </div>

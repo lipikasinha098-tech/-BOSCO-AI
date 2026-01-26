@@ -29,7 +29,7 @@ const Sidebar: React.FC<SidebarProps> = ({ currentView, setView, user, onLogout 
         <Logo size={28} />
         <div>
           <h1 className="font-black text-xl leading-tight text-white tracking-tighter">DON BOSCO AI</h1>
-          <p className="text-[10px] text-blue-500 uppercase tracking-widest font-black">Purnia Server</p>
+          <p className="text-[10px] text-blue-500 uppercase tracking-widest font-black">Global Server</p>
         </div>
       </div>
 

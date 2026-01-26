@@ -29,7 +29,6 @@ const App: React.FC = () => {
   }, [user]);
 
   const handleLogout = () => {
-    // Direct logout for better reliability
     setUser(null);
     setCurrentView(AppView.CHAT);
   };
@@ -47,7 +46,7 @@ const App: React.FC = () => {
       case AppView.VOICE:
         return <VoiceMentor />;
       case AppView.ABOUT:
-        return <AboutView />;
+        return <AboutView user={user} />;
       case AppView.ADMIN:
         return user.role === 'ADMIN' ? <AdminPanel onLogout={handleLogout} /> : <ChatInterface user={user} onLogout={handleLogout} />;
       default:
@@ -65,7 +64,6 @@ const App: React.FC = () => {
       />
 
       <main className="flex-1 flex flex-col h-full relative">
-        {/* Mobile Top Header */}
         <header className="md:hidden flex items-center justify-between px-6 py-4 bg-slate-900/50 backdrop-blur-xl border-b border-white/5 z-50">
           <div className="flex items-center gap-3">
             <Logo size={20} />
@@ -83,7 +81,6 @@ const App: React.FC = () => {
           {renderContent()}
         </div>
 
-        {/* Mobile Bottom Nav */}
         <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-slate-900/90 backdrop-blur-2xl border-t border-white/5 flex justify-around py-4 z-50 shadow-2xl pb-safe">
           <button 
             onClick={() => setCurrentView(AppView.CHAT)}

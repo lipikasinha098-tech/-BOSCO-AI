@@ -1,6 +1,6 @@
 {
-  "name": "Don Bosco AI: Youth Mentor",
-  "description": "A compassionate AI mentor inspired by the teachings of Saint John Bosco, with Google Search grounding and admin capabilities.",
+  "name": "Don Bosco AI: Global Mentor",
+  "description": "A compassionate AI mentor inspired by the teachings of Saint John Bosco, serving youth worldwide with educational support and guidance.",
   "requestFramePermissions": [
     "camera",
     "microphone"

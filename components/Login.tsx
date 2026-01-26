@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { User, UserRole } from '../types';
 import { Sparkles, Lock, User as UserIcon, LogIn, AlertCircle, GraduationCap, ShieldCheck } from 'lucide-react';
@@ -40,7 +41,7 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
         <div className="text-center mb-8 flex flex-col items-center">
           <Logo size={36} className="mb-6" />
           <h1 className="text-3xl font-black text-white mb-2 tracking-tighter">DON BOSCO AI</h1>
-          <p className="text-slate-500 text-xs font-bold uppercase tracking-widest">Educational Portal • Purnia</p>
+          <p className="text-slate-500 text-xs font-bold uppercase tracking-widest">Global Educational Portal</p>
         </div>
 
         {/* Toggle Mode */}
@@ -70,7 +71,7 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
                   value={studentName}
                   onChange={(e) => setStudentName(e.target.value)}
                   className="w-full bg-slate-800/50 border border-white/10 rounded-2xl py-4 pl-12 pr-4 focus:outline-none focus:ring-2 focus:ring-blue-500/40 focus:border-blue-500 text-white transition-all placeholder:text-slate-700 font-bold"
-                  placeholder="Enter name to remember"
+                  placeholder="Enter name to begin"
                   required
                 />
               </div>
@@ -126,7 +127,7 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
 
         <div className="mt-8 pt-6 border-t border-white/5 text-center">
           <p className="text-[10px] text-slate-600 uppercase tracking-[0.3em] font-black">
-            Powered by Piyush • Don Bosco Purnia
+            Powered by Piyush • Serving Youth Worldwide
           </p>
         </div>
       </div>

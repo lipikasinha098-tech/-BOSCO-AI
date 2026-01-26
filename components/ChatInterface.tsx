@@ -1,7 +1,7 @@
 
 import React, { useState, useRef, useEffect } from 'react';
 import { GoogleGenAI } from '@google/genai';
-import { Send, User, Bot, Loader2, Sparkles, Image as ImageIcon, Camera, ExternalLink, X, RefreshCw, LogOut, Wand2, Download } from 'lucide-react';
+import { Send, User, Bot, Loader2, Sparkles, Image as ImageIcon, Camera, ExternalLink, X, RefreshCw, LogOut, Wand2, Download, Zap, Mic, MicOff } from 'lucide-react';
 import { Message, GroundingSource, User as UserType, SystemConfig } from '../types';
 
 interface ChatInterfaceProps {
@@ -22,7 +22,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ user, onLogout }) => {
     }
     return [{
       role: 'model',
-      content: `Hello ${user.username}! I am DON BOSCO AI. I can now visualize your project ideas or generate any educational imagery directly here. Just ask me to "generate an image of..." or "draw a project mockup". How can I assist you?`,
+      content: `Hello ${user.username}! I am DON BOSCO AI, your global mentor. I'm here to support learners everywhere. I can visualize ideas, explain complex topics, or just provide encouragement. How can I assist you today?`,
       timestamp: new Date()
     }];
   });
@@ -31,13 +31,21 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ user, onLogout }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [isGeneratingImage, setIsGeneratingImage] = useState(false);
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
+  const [isCameraOpen, setIsCameraOpen] = useState(false);
+  const [facingMode, setFacingMode] = useState<'user' | 'environment'>('user');
+  const [isListening, setIsListening] = useState(false);
+  
   const scrollRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const streamRef = useRef<MediaStream | null>(null);
+  const recognitionRef = useRef<any>(null);
 
   const [config, setConfig] = useState<SystemConfig>(() => {
     const saved = localStorage.getItem(CONFIG_KEY);
     return saved ? JSON.parse(saved) : {
-      instruction: 'You are DON BOSCO AI, build by PIYUSH FROM DON BOSCO PURNIA. You are a genius mentor. Be extremely fast and concise.',
+      instruction: 'You are DON BOSCO AI, build by PIYUSH FROM DON BOSCO PURNIA. You are a global genius mentor for youth worldwide. Be extremely fast, compassionate, and concise.',
       safetyLevel: 'Standard',
       featuredPrompts: []
     };
@@ -49,6 +57,116 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ user, onLogout }) => {
       scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
     }
   }, [messages, isLoading, isGeneratingImage]);
+
+  // Camera stream lifecycle management with Facing Mode toggle
+  useEffect(() => {
+    let activeStream: MediaStream | null = null;
+
+    const startCamera = async () => {
+      // Stop existing tracks before starting new ones to avoid conflicts
+      if (streamRef.current) {
+        streamRef.current.getTracks().forEach(track => track.stop());
+      }
+
+      try {
+        activeStream = await navigator.mediaDevices.getUserMedia({ 
+          video: { facingMode: facingMode, width: { ideal: 1280 }, height: { ideal: 720 } }, 
+          audio: false 
+        });
+        streamRef.current = activeStream;
+        if (videoRef.current) {
+          videoRef.current.srcObject = activeStream;
+          videoRef.current.onloadedmetadata = () => {
+            videoRef.current?.play().catch(e => console.error("Video play failed", e));
+          };
+        }
+      } catch (err) {
+        alert("Unable to access camera. Please check permissions.");
+        setIsCameraOpen(false);
+        console.error(err);
+      }
+    };
+
+    if (isCameraOpen) {
+      startCamera();
+    } else {
+      if (streamRef.current) {
+        streamRef.current.getTracks().forEach(track => track.stop());
+        streamRef.current = null;
+      }
+    }
+
+    return () => {
+      if (activeStream) {
+        activeStream.getTracks().forEach(track => track.stop());
+      }
+    };
+  }, [isCameraOpen, facingMode]);
+
+  // Speech Recognition Setup
+  useEffect(() => {
+    const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+    if (SpeechRecognition) {
+      recognitionRef.current = new SpeechRecognition();
+      recognitionRef.current.continuous = true;
+      recognitionRef.current.interimResults = true;
+
+      recognitionRef.current.onresult = (event: any) => {
+        let interimTranscript = '';
+        for (let i = event.resultIndex; i < event.results.length; ++i) {
+          if (event.results[i].isFinal) {
+            setInput(prev => (prev + ' ' + event.results[i][0].transcript).trim());
+          } else {
+            interimTranscript += event.results[i][0].transcript;
+          }
+        }
+      };
+
+      recognitionRef.current.onerror = (event: any) => {
+        console.error("Speech recognition error", event.error);
+        setIsListening(false);
+      };
+
+      recognitionRef.current.onend = () => {
+        setIsListening(false);
+      };
+    }
+  }, []);
+
+  const toggleListening = () => {
+    if (!recognitionRef.current) {
+      alert("Speech recognition is not supported in this browser.");
+      return;
+    }
+
+    if (isListening) {
+      recognitionRef.current.stop();
+      setIsListening(false);
+    } else {
+      recognitionRef.current.start();
+      setIsListening(true);
+    }
+  };
+
+  const capturePhoto = () => {
+    if (videoRef.current && canvasRef.current) {
+      const video = videoRef.current;
+      const canvas = canvasRef.current;
+      canvas.width = video.videoWidth || 640;
+      canvas.height = video.videoHeight || 480;
+      const ctx = canvas.getContext('2d');
+      if (ctx) {
+        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+        const dataUrl = canvas.toDataURL('image/jpeg', 0.8);
+        setSelectedImage(dataUrl);
+        setIsCameraOpen(false);
+      }
+    }
+  };
+
+  const toggleCameraFacing = () => {
+    setFacingMode(prev => prev === 'user' ? 'environment' : 'user');
+  };
 
   const downloadTranscript = () => {
     const transcript = messages.map(m => 
@@ -92,7 +210,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ user, onLogout }) => {
   const handleReset = () => {
     const resetMsg: Message = {
       role: 'model',
-      content: `Memory reset successful. I'm ready for new instructions, ${user.username}.`,
+      content: `Memory reset successful. I'm ready to support your global learning journey, ${user.username}.`,
       timestamp: new Date()
     };
     setMessages([resetMsg]);
@@ -102,6 +220,10 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ user, onLogout }) => {
   const handleSend = async () => {
     const trimmedInput = input.trim();
     if ((!trimmedInput && !selectedImage) || isLoading || isGeneratingImage) return;
+
+    if (isListening) {
+      recognitionRef.current?.stop();
+    }
 
     const userMsg: Message = {
       role: 'user',
@@ -121,14 +243,14 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ user, onLogout }) => {
     const lowerInput = currentInput.toLowerCase();
     const isImageRequest = imgTriggers.some(kw => lowerInput.includes(kw)) && (lowerInput.includes('image') || lowerInput.includes('draw') || lowerInput.includes('picture') || lowerInput.includes('visual'));
 
-    if (isImageRequest) {
+    if (isImageRequest && !currentImage) {
       setIsGeneratingImage(true);
       try {
         const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
         const response = await ai.models.generateContent({
           model: 'gemini-2.5-flash-image',
           contents: {
-            parts: [{ text: `Professional educational visualization: ${currentInput}. Style: High-tech, futuristic, clear, blue/indigo neon highlights.` }]
+            parts: [{ text: `Professional educational visualization for global learners: ${currentInput}. Style: High-tech, futuristic, clear, blue/indigo neon highlights.` }]
           },
           config: { imageConfig: { aspectRatio: "1:1" } }
         });
@@ -144,7 +266,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ user, onLogout }) => {
         if (generatedUrl) {
           const modelMsg: Message = {
             role: 'model',
-            content: `I've visualized your request: "${currentInput}".`,
+            content: `I've visualized this for you: "${currentInput}".`,
             imageUrl: generatedUrl,
             timestamp: new Date()
           };
@@ -159,6 +281,17 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ user, onLogout }) => {
       setIsLoading(true);
       try {
         const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+        const parts: any[] = [{ text: currentInput || "Analyze this image." }];
+        
+        if (currentImage) {
+          parts.push({
+            inlineData: {
+              mimeType: 'image/jpeg',
+              data: currentImage.split(',')[1]
+            }
+          });
+        }
+
         const response = await ai.models.generateContent({
           model: 'gemini-3-flash-preview',
           contents: [
@@ -166,10 +299,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ user, onLogout }) => {
               role: m.role,
               parts: [{ text: m.content }]
             })),
-            { role: 'user', parts: [
-              { text: currentInput },
-              ...(currentImage ? [{ inlineData: { mimeType: 'image/jpeg', data: currentImage.split(',')[1] } }] : [])
-            ] }
+            { role: 'user', parts: parts }
           ],
           config: {
             systemInstruction: config.instruction,
@@ -203,7 +333,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ user, onLogout }) => {
             <h2 className="text-xl font-extrabold text-white tracking-tighter uppercase">DON BOSCO AI</h2>
             <div className="flex items-center gap-2 text-[10px] text-blue-500 font-black uppercase tracking-widest">
               <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse" />
-              Intelligence Core Active
+              Global Core Active
             </div>
           </div>
         </div>
@@ -222,7 +352,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ user, onLogout }) => {
       </header>
 
       <div className="md:hidden flex items-center justify-between py-3 border-b border-white/5 mb-2">
-         <span className="text-[9px] font-black text-slate-500 uppercase tracking-widest">Session Logic</span>
+         <span className="text-[9px] font-black text-slate-500 uppercase tracking-widest">Global Logic</span>
          <div className="flex gap-2">
            <button onClick={downloadTranscript} className="flex items-center gap-1.5 text-[8px] font-black text-emerald-500 uppercase tracking-widest bg-emerald-500/5 px-2.5 py-1 rounded-lg border border-emerald-500/20">
              <Download size={10} /> Save
@@ -265,6 +395,43 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ user, onLogout }) => {
         )}
       </div>
 
+      {/* Camera Modal */}
+      {isCameraOpen && (
+        <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/95 backdrop-blur-md animate-in fade-in duration-300">
+          <div className="relative w-full max-w-lg bg-slate-900 rounded-[2.5rem] border border-white/10 overflow-hidden shadow-2xl flex flex-col">
+            <video 
+              ref={videoRef} 
+              autoPlay 
+              playsInline 
+              muted
+              className="w-full aspect-[3/4] object-cover bg-black"
+            />
+            <div className="p-8 flex items-center justify-between bg-slate-950/80">
+              <button 
+                onClick={() => setIsCameraOpen(false)}
+                className="p-4 bg-white/5 hover:bg-rose-500/20 text-white rounded-2xl border border-white/10 transition-all active:scale-95"
+              >
+                <X size={24} />
+              </button>
+              <button 
+                onClick={capturePhoto}
+                className="p-6 bg-blue-600 hover:bg-blue-500 text-white rounded-full shadow-2xl shadow-blue-500/40 transition-all active:scale-90 border-4 border-white/10"
+              >
+                <Zap size={32} fill="currentColor" />
+              </button>
+              <button 
+                onClick={toggleCameraFacing}
+                className="p-4 bg-white/5 hover:bg-emerald-500/20 text-white rounded-2xl border border-white/10 transition-all active:scale-95"
+                title="Switch Camera"
+              >
+                <RefreshCw size={24} className={facingMode === 'environment' ? 'rotate-180 transition-transform' : 'transition-transform'} />
+              </button>
+            </div>
+          </div>
+          <canvas ref={canvasRef} className="hidden" />
+        </div>
+      )}
+
       <div className="pb-36 md:pb-10 pt-2 sticky bottom-0 z-40 bg-slate-950/40 backdrop-blur-sm -mx-4 px-4">
         {selectedImage && (
           <div className="mb-3 flex items-center gap-3 p-1.5 bg-slate-900 border border-white/10 rounded-2xl w-fit shadow-2xl animate-in zoom-in">
@@ -273,16 +440,36 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ user, onLogout }) => {
           </div>
         )}
         <div className="bg-slate-900/80 backdrop-blur-3xl border border-white/10 rounded-[1.75rem] md:rounded-[2rem] p-1.5 md:p-2.5 shadow-2xl flex flex-row items-center gap-1 transition-all focus-within:ring-1 ring-blue-500/50">
-          <div className="flex items-center">
-             <button onClick={() => fileInputRef.current?.click()} className="p-2.5 text-slate-500 hover:text-blue-400 active:scale-90 transition-transform"><ImageIcon size={20} /></button>
+          <div className="flex items-center gap-0.5">
+             <button 
+              onClick={() => fileInputRef.current?.click()} 
+              title="Upload Image"
+              className="p-2 md:p-2.5 text-slate-500 hover:text-blue-400 active:scale-90 transition-transform"
+             >
+               <ImageIcon size={20} />
+             </button>
+             <button 
+              onClick={() => setIsCameraOpen(true)} 
+              title="Take Photo"
+              className="p-2 md:p-2.5 text-slate-500 hover:text-emerald-400 active:scale-90 transition-transform"
+             >
+               <Camera size={20} />
+             </button>
+             <button 
+              onClick={toggleListening} 
+              title="Voice to Text"
+              className={`p-2 md:p-2.5 transition-all active:scale-90 ${isListening ? 'text-rose-500 animate-pulse' : 'text-slate-500 hover:text-blue-400'}`}
+             >
+               {isListening ? <MicOff size={20} /> : <Mic size={20} />}
+             </button>
           </div>
           <div className="flex-1 flex items-center gap-2 min-w-0 pr-1">
             <input
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={(e) => e.key === 'Enter' && !e.shiftKey && (e.preventDefault(), handleSend())}
-              placeholder="Query mentor..."
-              className="flex-1 bg-transparent px-1 py-3 text-sm focus:outline-none text-white font-bold tracking-tight placeholder:text-slate-700"
+              placeholder={isListening ? "Listening..." : "Ask global mentor..."}
+              className={`flex-1 bg-transparent px-1 py-3 text-sm focus:outline-none text-white font-bold tracking-tight placeholder:text-slate-700 ${isListening ? 'animate-pulse' : ''}`}
             />
             <button
               onClick={handleSend}
