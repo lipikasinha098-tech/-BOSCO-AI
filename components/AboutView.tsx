@@ -3,15 +3,17 @@ import React, { useState } from 'react';
 import { 
   Heart, ShieldCheck, GraduationCap, Users, Sparkles, 
   Download, Smartphone, Github, FileCode, Copy, 
-  Check, Globe, Server, Code2, Terminal, Info, Lock
+  Check, Globe, Server, Code2, Terminal, Info, Lock, LayoutDashboard
 } from 'lucide-react';
-import { User } from '../types';
+import { User, AppView } from '../types';
+import { motion } from 'framer-motion';
 
 interface AboutViewProps {
   user: User;
+  setView: (view: AppView) => void;
 }
 
-const AboutView: React.FC<AboutViewProps> = ({ user }) => {
+const AboutView: React.FC<AboutViewProps> = ({ user, setView }) => {
   const [copiedFile, setCopiedFile] = useState<string | null>(null);
   const isAdmin = user.role === 'ADMIN';
 
@@ -20,8 +22,8 @@ const AboutView: React.FC<AboutViewProps> = ({ user }) => {
     { 
       name: 'metadata.json', 
       content: `{
-  "name": "Don Bosco AI: Global Mentor",
-  "description": "A compassionate AI mentor inspired by the teachings of Saint John Bosco, serving youth worldwide with educational support and guidance.",
+  "name": "Lipi AI",
+  "description": "A vibrant and colorful AI assistant designed to empower creativity and intelligence in every pixel.",
   "requestFramePermissions": ["camera", "microphone"]
 }` 
     },
@@ -32,7 +34,7 @@ const AboutView: React.FC<AboutViewProps> = ({ user }) => {
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Don Bosco AI | Educational Mentor</title>
+    <title>Lipi AI | Your Colorful Assistant</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <script type="importmap">
@@ -82,13 +84,21 @@ import React, { useState, useEffect } from 'react';
 
   return (
     <div className="flex flex-col h-full max-w-5xl mx-auto w-full px-6 md:px-10 overflow-y-auto pb-40 md:pb-12 scrollbar-hide">
-      <header className="py-16 text-center">
-        <div className="inline-block p-5 rounded-[2rem] bg-gradient-to-br from-blue-600 to-indigo-700 text-white mb-8 shadow-2xl shadow-blue-600/20">
+      <header className="py-16 text-center relative">
+        <motion.button 
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          onClick={() => setView(AppView.DASHBOARD)}
+          className="absolute top-0 left-0 flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-pink-500/10 to-purple-500/10 text-pink-600 dark:text-pink-400 rounded-xl border border-pink-500/20 text-[10px] font-black uppercase tracking-widest hover:shadow-lg transition-all"
+        >
+          <LayoutDashboard size={14} /> Hub
+        </motion.button>
+        <div className="inline-block p-5 rounded-[2rem] bg-gradient-to-br from-pink-600 via-purple-600 to-indigo-700 text-white mb-8 shadow-2xl shadow-pink-600/20">
           <Sparkles size={48} />
         </div>
-        <h2 className="text-4xl font-black text-white mb-4 tracking-tighter uppercase">Don Bosco AI</h2>
+        <h2 className="text-4xl font-black text-white mb-4 tracking-tighter uppercase bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 bg-clip-text text-transparent">Lipi AI</h2>
         <p className="text-slate-400 text-lg max-w-2xl mx-auto font-medium leading-relaxed">
-          The ultimate educational mentor app, built for youth worldwide.
+          Your vibrant, colorful AI assistant. Empowering creativity and intelligence in every pixel.
         </p>
       </header>
 
@@ -170,10 +180,10 @@ import React, { useState, useEffect } from 'react';
         </>
       ) : (
         <section className="mb-12 py-12 px-8 bg-slate-900/30 border border-white/5 rounded-[2.5rem] text-center">
-           <Info className="mx-auto mb-6 text-blue-500/50" size={32} />
-           <h3 className="text-lg font-black text-white uppercase tracking-tight mb-3">Learner Portal</h3>
+           <Info className="mx-auto mb-6 text-pink-500/50" size={32} />
+           <h3 className="text-lg font-black text-white uppercase tracking-tight mb-3">Lipi Portal</h3>
            <p className="text-slate-500 text-sm max-w-lg mx-auto leading-relaxed font-bold">
-             Welcome to the Don Bosco AI educational companion. This system is designed to provide guidance, creative tools, and intellectual support to youth across the globe.
+             Welcome to Lipi AI, your vibrant and colorful AI assistant. This system is designed to provide guidance, creative tools, and intellectual support to users across the globe.
            </p>
         </section>
       )}
@@ -197,8 +207,8 @@ import React, { useState, useEffect } from 'react';
       </div>
 
       <footer className="pt-16 border-t border-white/5 text-center">
-        <p className="text-slate-600 text-[10px] font-black uppercase tracking-[0.4em] mb-4">Developed by Piyush Kumar</p>
-        <p className="text-slate-700 text-[8px] font-black uppercase tracking-widest">Don Bosco School • Purnia • Global Mission</p>
+        <p className="text-slate-600 text-[10px] font-black uppercase tracking-[0.4em] mb-4">Developed by Lipi</p>
+        <p className="text-slate-700 text-[8px] font-black uppercase tracking-widest">Colorful Vision • Global Mission</p>
       </footer>
     </div>
   );

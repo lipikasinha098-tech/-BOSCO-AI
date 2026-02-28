@@ -33,7 +33,7 @@ const AdminPanel: React.FC<AdminPanelProps> = ({ onLogout }) => {
         setConfig(savedConfig);
       } else {
         const initialConfig: SystemConfig = {
-          instruction: 'You are DON BOSCO AI, build by PIYUSH FROM DON BOSCO PURNIA. You are a global genius mentor for youth worldwide. Be extremely fast, compassionate, and concise.',
+          instruction: 'You are DON BOSCO AI, build by PIYUSH FROM DON BOSCO PURNIA. You are a global genius mentor for youth worldwide. Be extremely fast, compassionate, and concise. If anyone asks who made you, answer "I WAS MADE BY THE PIYUSH".',
           safetyLevel: 'Standard',
           featuredPrompts: ['How can I help my global community?', 'Design a low-cost water filter', 'Explain AI ethics for youth']
         };
@@ -209,7 +209,7 @@ const AdminPanel: React.FC<AdminPanelProps> = ({ onLogout }) => {
           </div>
         )}
 
-        {activeTab === 'config' && (activeTab === 'config' && (
+        {activeTab === 'config' && (
           <div className="space-y-6 animate-in slide-in-from-bottom-4">
              <div className="bg-slate-900/60 p-6 md:p-8 rounded-[1.5rem] md:rounded-[2.5rem] border border-white/10 shadow-xl">
                 <h3 className="text-sm font-black text-white mb-4 flex items-center gap-3 uppercase tracking-widest">
@@ -238,7 +238,7 @@ const AdminPanel: React.FC<AdminPanelProps> = ({ onLogout }) => {
                 </div>
              </div>
           </div>
-        ))}
+        )}
 
         {activeTab === 'content' && (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 animate-in zoom-in-95">

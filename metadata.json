@@ -1,6 +1,6 @@
 {
-  "name": "Don Bosco AI: Global Mentor",
-  "description": "A compassionate AI mentor inspired by the teachings of Saint John Bosco, serving youth worldwide with educational support and guidance.",
+  "name": "Lipi AI",
+  "description": "A vibrant, colorful AI assistant designed to inspire creativity and provide intelligent guidance.",
   "requestFramePermissions": [
     "camera",
     "microphone"
